@@ -39,11 +39,12 @@ class ParticleStack {
     }
     
     int memHeight = numRenderedParticles - falling.size();
+    int numBatchesRendered = memHeight / particleBatchSize;
     if(memHeight > 0){
       if(rwidth == 1){
-        line(x,y+(rheight-memHeight),x,y+rheight);
+        line(x,y+(rheight-(numBatchesRendered*particleHeight)),x,y+rheight);
       }else{        
-        rect(x,y+(rheight-memHeight),rwidth-1,memHeight);
+        rect(x,y+(rheight-(numBatchesRendered*particleHeight)),rwidth-1,numBatchesRendered*particleHeight);
       }
     }
   }
@@ -62,7 +63,7 @@ class ParticleStack {
           f.move();
         }
 
-        falling.add(new FallingParticle(x, rwidth, speed, y+(rheight-numRenderedParticles), y, particleHeight));
+        falling.add(new FallingParticle(x, rwidth, speed, y+(rheight-(numRenderedParticles*particleHeight)), y, particleHeight));
         inboundParticleCount -= particleBatchSize;
         ++numRenderedParticles;
       }

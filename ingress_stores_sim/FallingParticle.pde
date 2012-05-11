@@ -21,7 +21,12 @@ class FallingParticle {
     if(y<=maxY){
       pushStyle();
       stroke(51);
-      line(x-1,lastY,x+rwidth,lastY);
+      fill(51);
+      if(particleHeight == 1){
+        line(x-1,lastY,x+rwidth,lastY);
+      }else{
+        rect(x,lastY,rwidth-1,particleHeight+1);
+      }
       popStyle();
       y+=speed;
       int actualY = y;
@@ -29,7 +34,11 @@ class FallingParticle {
         y=maxY;
       }
       lastY=y;
-      line(x,y,x+(rwidth-1),y);
+      if(particleHeight == 1){
+        line(x,y,x+(rwidth-1),y);
+      }else{
+        rect(x,y,rwidth-1,particleHeight);
+      }
     }
   }
 

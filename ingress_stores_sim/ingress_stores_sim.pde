@@ -2,12 +2,12 @@ HBaseRegionServer regionServer;
 RegionIngressViz regionIngressViz;
 ArrayList flushQueue;
 
-int particlesPerSecond = 4000;
-int totalRegions = 2000;
+int particlesPerSecond = 40000;
+int totalRegions = 8000;
 int numRegionServers = 8;
-int regionWidth = 1;
-int gapWidth = 0;
-int speed = 10;
+int regionWidth = 3;
+int gapWidth = 3;
+int speed = 20;
 int particleBatchSize = 1;
 
 int avgParticleSize = 4096;
