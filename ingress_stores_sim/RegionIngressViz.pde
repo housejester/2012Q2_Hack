@@ -62,7 +62,7 @@ class SingleRegionIngressView {
     this.particleBatchSize = particleBatchSize;
     
     memStore = new ParticleStack(x, width, speed, particleBatchSize, y, 200, particleHeight);
-    storeFiles = new ParticleStack(x, width, speed, particleBatchSize, y+200, 200, particleHeight);
+    storeFiles = new ParticleStack(x, width, speed/2, particleBatchSize*20, y+200, 200, particleHeight);
     compactedFiles = new ParticleStack(x, width, speed, particleBatchSize, y+400, 200, particleHeight);
     deletedFiles = new ParticleStack(x, width, speed, particleBatchSize, y+600, 200, particleHeight);
   }
@@ -84,6 +84,15 @@ class SingleRegionIngressView {
       stroke(255);
     }
     memStore.draw();
+    
+    storeFiles.setParticleCount(region.storeFileCount);
+    if(region.compacting){
+      fill(#FF0000);
+      stroke(#FF0000);
+    }else{
+      fill(255);
+      stroke(255);
+    }
     storeFiles.draw();
     compactedFiles.draw();
     deletedFiles.draw();

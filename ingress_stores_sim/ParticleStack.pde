@@ -72,7 +72,6 @@ class ParticleStack {
   void setParticleCount(int count){
     int currTotal = (numRenderedParticles * particleBatchSize) + inboundParticleCount;
     if(count < currTotal){
-      println("count:"+count+",numRenderedParticles:"+numRenderedParticles+",inboundParticleCount:"+inboundParticleCount);
       reset();
       inboundParticleCount = count;
     }else{
@@ -88,6 +87,7 @@ class ParticleStack {
     numRenderedParticles=0;
     
     stroke(51);
+    fill(51);
     if(rwidth == 1){
       line(x,y,x,y+rheight);
     }else{        
