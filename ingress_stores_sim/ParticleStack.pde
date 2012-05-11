@@ -22,10 +22,13 @@ class ParticleStack {
     this.particleBatchSize = particleBatchSize;
   }
   
-  void display(){
+  void setup(){
+  }
+  
+  void draw(){
     for(int i=0;i<falling.size(); i++){
       FallingParticle fallingA = (FallingParticle) falling.get(i);
-      fallingA.display();
+      fallingA.draw();
     }
 
     for (int i = falling.size()-1; i >= 0; i--) { 
@@ -37,7 +40,6 @@ class ParticleStack {
     
     int memHeight = numRenderedParticles - falling.size();
     if(memHeight > 0){
-      stroke(255);
       if(rwidth == 1){
         line(x,y+(rheight-memHeight),x,y+rheight);
       }else{        
@@ -46,12 +48,11 @@ class ParticleStack {
     }
   }
 
-  void addParticles(int count){
+  void renderNewParticles(){
     if(numRenderedParticles >= maxRenderedParticles){
       return;
     }
 
-    inboundParticleCount += count;
     if(inboundParticleCount >= particleBatchSize){
       int numFalling = inboundParticleCount / particleBatchSize;
       for(int i=0;i<numFalling && numRenderedParticles < maxRenderedParticles;i++){
@@ -65,6 +66,32 @@ class ParticleStack {
         inboundParticleCount -= particleBatchSize;
         ++numRenderedParticles;
       }
+    }
+  }
+  
+  void setParticleCount(int count){
+    int currTotal = (numRenderedParticles * particleBatchSize) + inboundParticleCount;
+    if(count < currTotal){
+      println("count:"+count+",numRenderedParticles:"+numRenderedParticles+",inboundParticleCount:"+inboundParticleCount);
+      reset();
+      inboundParticleCount = count;
+    }else{
+      int adding = count - currTotal;
+      inboundParticleCount += adding;
+    }
+    renderNewParticles();
+  }
+  
+  void reset(){
+    falling.clear();
+    inboundParticleCount=0;
+    numRenderedParticles=0;
+    
+    stroke(51);
+    if(rwidth == 1){
+      line(x,y,x,y+rheight);
+    }else{        
+      rect(x,y,rwidth-1,rheight);
     }
   }
   

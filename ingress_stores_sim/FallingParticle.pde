@@ -16,21 +16,23 @@ class FallingParticle {
     this.speed = speed;
     this.maxY = maxY;
   }
-
-  void display(){
+  
+  void draw(){
     if(y<=maxY){
+      pushStyle();
       stroke(51);
       line(x-1,lastY,x+rwidth,lastY);
+      popStyle();
       y+=speed;
       int actualY = y;
       if(y>maxY){
         y=maxY;
       }
       lastY=y;
-      stroke(255);
       line(x,y,x+(rwidth-1),y);
     }
   }
+
   //allows for multiple particles per frame to go to the same stack, and render separately
   void move(){
     y+=1;
