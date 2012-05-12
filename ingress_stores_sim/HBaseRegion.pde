@@ -23,10 +23,13 @@ class HBaseRegion {
     flushing = true;
   }
  
-  void flushMemStore(){
+  void flushMemStore(long pause){
     storeFileCount += memStoreCount;
     memStoreCount = 0;
     flushing = false;
+    try{
+      Thread.sleep(pause);
+    }catch(Exception ex){}
   }
   
   void requestCompaction(){

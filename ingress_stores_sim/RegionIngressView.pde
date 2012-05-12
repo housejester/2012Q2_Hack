@@ -21,10 +21,10 @@ class RegionIngressView {
     this.speed = speed;
     this.particleBatchSize = particleBatchSize;
     
-    memStore = new ParticleStack(x, width, speed, particleBatchSize, y, 200, particleHeight);
-    storeFiles = new ParticleStack(x, width, speed/2, particleBatchSize*20, y+200, 200, particleHeight*5);
-    compactedFiles = new ParticleStack(x, width, speed, particleBatchSize, y+400, 200, particleHeight);
-    deletedFiles = new ParticleStack(x, width, speed, particleBatchSize, y+600, 200, particleHeight);
+    memStore = new ParticleStack(x, width, speed, 1, y, 200, 1, 1);
+    storeFiles = new ParticleStack(x, width, speed, 100, y+200, 200, 21, 5);
+    compactedFiles = new ParticleStack(x, width, speed, particleBatchSize, y+400, 200, 1, 1);
+    deletedFiles = new ParticleStack(x, width, speed, particleBatchSize, y+600, 200, 1, 1);
   }
 
   void setup(){
@@ -33,7 +33,6 @@ class RegionIngressView {
     compactedFiles.setup();
     deletedFiles.setup();
   }
-
   void draw(){
     memStore.setParticleCount(region.memStoreCount);
     if(region.flushing){

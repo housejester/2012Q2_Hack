@@ -1,6 +1,7 @@
 class HBaseRegionServer { 
   int totalRegions;
   int visibleRegions;
+  HBaseRegion[] allRegions;
   HBaseRegion[] regions;
   long totalPutsInMemory;
   int avgPutSizeBytes;
@@ -14,21 +15,23 @@ class HBaseRegionServer {
     this.avgPutSizeBytes = avgPutSizeBytes - (int)(avgPutSizeBytes * ((float)compressionPct/100.0));
     this.flushQueue = flushQueue;
     
-    float pctTotalServer = (float)visibleRegions / totalRegions;
-    long memorySlice = (long)(serverMemoryBytes * pctTotalServer);
-    memStoreItemThreshold = memorySlice / this.avgPutSizeBytes;
-    println("pctTotalServer:"+pctTotalServer+",memorySlice:"+memorySlice+",memStoreItemThreshold = "+memStoreItemThreshold);
+    memStoreItemThreshold = serverMemoryBytes / this.avgPutSizeBytes;
+    println("memStoreItemThreshold = "+memStoreItemThreshold);
     
+    allRegions = new HBaseRegion[totalRegions];
     regions = new HBaseRegion[visibleRegions];
-    for(int i=0;i<visibleRegions;i++){
-      regions[i] = new HBaseRegion(i);
+    for(int i=0;i<totalRegions;i++){
+      allRegions[i] = new HBaseRegion(i);
+      if(i<visibleRegions){
+        regions[i] = allRegions[i];
+      }
     }
   }
   
   void flushRegion(int index){
-    HBaseRegion region = regions[index];
+    HBaseRegion region = allRegions[index];
     totalPutsInMemory -= region.memStoreCount;
-    region.flushMemStore();
+    region.flushMemStore(15);
   }
   
   boolean isAboveGlobalMemThreshold(){
@@ -38,10 +41,10 @@ class HBaseRegionServer {
   void addPuts(int numP){
     totalPutsInMemory += numP;
     for(int i=0;i<numP;i++){
-      int which = (int)random(regions.length);
-      boolean before = regions[which].flushing;
-      regions[which].addPuts(1);
-      if(!before && regions[which].flushing){
+      int which = (int)random(allRegions.length);
+      boolean before = allRegions[which].flushing;
+      allRegions[which].addPuts(1);
+      if(!before && allRegions[which].flushing){
         //add 'which' to flush queue.
         synchronized(flushQueue){
           flushQueue.add(which);
