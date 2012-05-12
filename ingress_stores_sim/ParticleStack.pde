@@ -16,8 +16,9 @@ class ParticleStack {
   int particlesPerPixel;
   ArrayList falling;
   ArrayList landed;
+  boolean highlightOverfills;
   
-  ParticleStack(int x, int rwidth, int speed, int particleBatchSize, int y, int rheight, int particleHeight, int particlesPerPixel){
+  ParticleStack(int x, int rwidth, int speed, int particleBatchSize, int y, int rheight, int particleHeight, int particlesPerPixel, boolean highlightOverfills){
     this.x = x;
     this.y = y;
     this.particleHeight = particleHeight;
@@ -25,6 +26,7 @@ class ParticleStack {
     this.rwidth = rwidth;
     this.speed = speed;
     this.particlesPerPixel = particlesPerPixel;
+    this.highlightOverfills = highlightOverfills;
     falling = new ArrayList();
     landed = new ArrayList();
     this.particleBatchSize = particleBatchSize;
@@ -90,7 +92,7 @@ class ParticleStack {
       stackHeight += pHeight;
       int maxY = y+(rheight - stackHeight);
       
-      falling.add(new FallingParticle(x, rwidth, speed, maxY, y, pHeight, pFillHeight, numParticles, pHeight > particleHeight));
+      falling.add(new FallingParticle(x, rwidth, speed, maxY, y, pHeight, pFillHeight, numParticles, highlightOverfills && (pHeight > particleHeight)));
       inboundParticleCount -= numParticles;
       ++numRenderedParticles;
     }

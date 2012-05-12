@@ -21,10 +21,10 @@ class RegionIngressView {
     this.speed = speed;
     this.particleBatchSize = particleBatchSize;
     
-    memStore = new ParticleStack(x, width, speed, 1, y, 200, 1, 1);
-    storeFiles = new ParticleStack(x, width, speed, 100, y+200, 200, 21, 5);
-    compactedFiles = new ParticleStack(x, width, speed, particleBatchSize, y+400, 200, 1, 1);
-    deletedFiles = new ParticleStack(x, width, speed, particleBatchSize, y+600, 200, 1, 1);
+    memStore = new ParticleStack(x, width, speed, 1, y, 200, 1, 1, false);
+    storeFiles = new ParticleStack(x, width, speed, 100, y+200, 200, 21, 5, true);
+    compactedFiles = new ParticleStack(x, width, speed, particleBatchSize, y+400, 200, 1, 1, false);
+    deletedFiles = new ParticleStack(x, width, speed, particleBatchSize, y+600, 200, 1, 1, false);
   }
 
   void setup(){
