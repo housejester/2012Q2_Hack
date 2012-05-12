@@ -33,7 +33,7 @@ class RegionIngressViz {
     int numDashes = this.width/4;
     stroke(100);
     for(int i=0;i<numDashes;i++){
-      line(x+(i*4),y+100,x+(i*4)+1,y+100);
+      line(x+(i*4),y+50,x+(i*4)+1,y+50);
     }
   }
 }

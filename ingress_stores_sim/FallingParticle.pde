@@ -61,8 +61,8 @@ class FallingParticle {
         } 
         if(overfilled){
           pushStyle();
-          stroke(#FABACA);
-          fill(#FABACA);
+          stroke(#FF6600);
+          fill(#FF6600);
           rect(x,y+(height-filledHeight),rwidth-1,filledHeight-1);
           popStyle();
         }else{

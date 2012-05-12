@@ -1,20 +1,22 @@
 class HBaseRegion {
   int regionIndex;
-  int memStoreCount;
-  int storeFileCount;
+  int memStorePutsCount;
+  int storeFilePutsCount;
   boolean flushing;
   boolean compacting;
+  ArrayList storeFiles;
   
   HBaseRegion(int regionIndex){
     this.regionIndex = regionIndex;
+    storeFiles = new ArrayList();
   }
 
   void display(){
   }
   
   void addPuts(int count){
-    memStoreCount += count;
-    if(memStoreCount >= 100){
+    memStorePutsCount += count;
+    if(memStorePutsCount >= 100){
       requestFlush();
     }
   }
@@ -24,12 +26,17 @@ class HBaseRegion {
   }
  
   void flushMemStore(long pause){
-    storeFileCount += memStoreCount;
-    memStoreCount = 0;
+    int puts = memStorePutsCount;
+    storeFiles.add(puts);
+    storeFilePutsCount += puts;
+    memStorePutsCount -= puts;
     flushing = false;
     try{
       Thread.sleep(pause);
     }catch(Exception ex){}
+    if(storeFiles.size() > 3){
+      compacting = true;
+    }
   }
   
   void requestCompaction(){

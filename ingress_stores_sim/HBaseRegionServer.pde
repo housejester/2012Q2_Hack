@@ -30,7 +30,7 @@ class HBaseRegionServer {
   
   void flushRegion(int index){
     HBaseRegion region = allRegions[index];
-    totalPutsInMemory -= region.memStoreCount;
+    totalPutsInMemory -= region.memStorePutsCount;
     region.flushMemStore(15);
   }
   

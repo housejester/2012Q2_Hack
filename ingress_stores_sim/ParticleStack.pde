@@ -110,6 +110,9 @@ class ParticleStack {
     lastCount = count;
     renderNewParticles();
   }
+  void compact(){
+    reset();
+  }
   
   void reset(){
     falling.clear();

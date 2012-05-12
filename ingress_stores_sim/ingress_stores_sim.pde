@@ -10,7 +10,7 @@ int gapWidth = 3;
 int speed = 10;
 int particleBatchSize = 1;
 
-int avgParticleSize = 2048;
+int avgParticleSize = 2048 * 300;
 int maxRenderedParticlesize = 64 * 1024 * 1024;
 long maxMemStoreAll = 4 * 1024 * 1024 * 1024L;
 
@@ -21,7 +21,7 @@ void setup() {
   flushQueue = new ArrayList();
   size(1324, 768);
   background(51);
-  int margin = 10;
+  int margin = 0;
 
   int widgetWidth = width - margin;
   int widgetX = (int)((width-widgetWidth)/2);
@@ -34,8 +34,6 @@ void setup() {
   
   println("num regions displayed: "+numstacks);
 
-//  float pctRegions = (float)numstacks/totalRegions;
-//  particlesPerMilli = (particlesPerSecond * pctRegions) / 1000;
   particlesPerMilli = ((float)particlesPerSecond / numRegionServers)/1000;
   println("ppmilli="+particlesPerMilli);
 
@@ -50,12 +48,11 @@ void setup() {
 void storeFlusher() throws Exception{
   while(true){
     if(regionServer.isAboveGlobalMemThreshold()){
-     // println("above mem threshold");
       int largest = -1;
       int largestIndex = -1;
       for(int i=0;i<regionServer.regions.length;i++){
-        if(regionServer.allRegions[i].memStoreCount > largest){
-          largest = regionServer.allRegions[i].memStoreCount;
+        if(regionServer.allRegions[i].memStorePutsCount > largest){
+          largest = regionServer.allRegions[i].memStorePutsCount;
           largestIndex = i;
         }
       }

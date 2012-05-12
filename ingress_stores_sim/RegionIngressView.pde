@@ -21,20 +21,18 @@ class RegionIngressView {
     this.speed = speed;
     this.particleBatchSize = particleBatchSize;
     
-    memStore = new ParticleStack(x, width, speed, 1, y, 200, 1, 1, false);
-    storeFiles = new ParticleStack(x, width, speed, 100, y+200, 200, 21, 5, true);
-    compactedFiles = new ParticleStack(x, width, speed, particleBatchSize, y+400, 200, 1, 1, false);
-    deletedFiles = new ParticleStack(x, width, speed, particleBatchSize, y+600, 200, 1, 1, false);
+    memStore = new ParticleStack(x, width, speed, 1, y, 150, 1, 1, false);
+    storeFiles = new ParticleStack(x, width, speed, 100, y+150, 180, 21, 5, true);
   }
 
   void setup(){
     memStore.setup();
     storeFiles.setup();
-    compactedFiles.setup();
-    deletedFiles.setup();
   }
+  int lastStoreFileCount = 0;
+  
   void draw(){
-    memStore.setParticleCount(region.memStoreCount);
+    memStore.setParticleCount(region.memStorePutsCount);
     if(region.flushing){
       fill(#FF0000);
       stroke(#FF0000);
@@ -44,16 +42,20 @@ class RegionIngressView {
     }
     memStore.draw();
     
-    storeFiles.setParticleCount(region.storeFileCount);
+    storeFiles.setParticleCount(region.storeFiles.size());
+    if(lastStoreFileCount > region.storeFiles.size()){
+      //storeFileCount different!  the region must have compacted.
+      storeFiles.compact();
+    }
+    lastStoreFileCount=region.storeFiles.size();
+    
     if(region.compacting){
       fill(#FF0000);
       stroke(#FF0000);
     }else{
-      fill(#CC6600);
-      stroke(#CC6600);
+      fill(#FF9966);
+      stroke(#FF9966);
     }
     storeFiles.draw();
-    compactedFiles.draw();
-    deletedFiles.draw();
   }
 }
