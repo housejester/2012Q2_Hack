@@ -34,9 +34,20 @@ class HBaseRegion {
     try{
       Thread.sleep(pause);
     }catch(Exception ex){}
+
     if(storeFiles.size() > 3){
       compacting = true;
     }
+  }
+  
+  void compactStores(long pause){
+    long compactPutsCount = storeFilePutsCount;
+    try{
+      Thread.sleep(pause);
+    }catch(Exception ex){}
+    storeFilePutsCount -= (int)(compactPutsCount/30);
+    storeFiles.clear();
+    compacting = false;
   }
   
   void requestCompaction(){

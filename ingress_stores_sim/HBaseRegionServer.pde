@@ -8,12 +8,14 @@ class HBaseRegionServer {
   long serverMemoryBytes;
   long memStoreItemThreshold;
   ArrayList flushQueue;
+  ArrayList compactionQueue;
   
   HBaseRegionServer(int totalRegions, int visibleRegions, int avgPutSizeBytes, int compressionPct, long serverMemoryBytes){
     this.totalRegions = totalRegions;
     this.visibleRegions = visibleRegions;
     this.avgPutSizeBytes = avgPutSizeBytes - (int)(avgPutSizeBytes * ((float)compressionPct/100.0));
     this.flushQueue = new ArrayList();
+    this.compactionQueue = new ArrayList();
     
     memStoreItemThreshold = serverMemoryBytes / this.avgPutSizeBytes;
     println("memStoreItemThreshold = "+memStoreItemThreshold);
@@ -28,12 +30,24 @@ class HBaseRegionServer {
       }
     }
     (new Thread( new StoreFlusher(this, 20) )).start();
+    (new Thread( new StoreCompactor(this, 20) )).start();
   }
   
   void flushRegion(int index){
     HBaseRegion region = allRegions[index];
     totalPutsInMemory -= region.memStorePutsCount;
     region.flushMemStore(15);
+    if(!region.compacting && region.storeFiles.size() >= 3){
+      region.compacting = true;
+      synchronized(compactionQueue){
+        compactionQueue.add(region.regionIndex);
+      }
+    }
+  }
+
+  void compactRegion(int index){
+    HBaseRegion region = allRegions[index];
+    region.compactStores(30);
   }
   
   boolean isAboveGlobalMemThreshold(){
@@ -53,6 +67,17 @@ class HBaseRegionServer {
         }
       }
     }
+  }
+  
+  boolean compactCheck(){
+    if(compactionQueue.size() > 0){
+      compactRegion((Integer)compactionQueue.get(0));
+      synchronized(compactionQueue){
+        compactionQueue.remove(0);
+      }
+      return true;
+    }
+    return false;
   }
   
   boolean flushCheck(){
@@ -86,23 +111,42 @@ class HBaseRegionServer {
       return true;
     }
     return false;
-  }
-  
-  class StoreFlusher implements Runnable{
-    HBaseRegionServer regionServer;
-    long sleepInterval;
-    StoreFlusher(HBaseRegionServer regionServer, long sleepInterval){
-      this.regionServer = regionServer;
-      this.sleepInterval = sleepInterval;
-    }    
-    void run() {
-      while(true){
-        if(!regionServer.flushCheck()){
-          try{
-            Thread.sleep(sleepInterval);
-          }catch(Exception ex){}
-        }
+  } 
+}
+
+class StoreFlusher implements Runnable{
+  HBaseRegionServer regionServer;
+  long sleepInterval;
+  StoreFlusher(HBaseRegionServer regionServer, long sleepInterval){
+    this.regionServer = regionServer;
+    this.sleepInterval = sleepInterval;
+  }    
+  void run() {
+    while(true){
+      if(!regionServer.flushCheck()){
+        try{
+          Thread.sleep(sleepInterval);
+        }catch(Exception ex){}
       }
     }
   }
 }
+
+class StoreCompactor implements Runnable{
+  HBaseRegionServer regionServer;
+  long sleepInterval;
+  StoreCompactor(HBaseRegionServer regionServer, long sleepInterval){
+    this.regionServer = regionServer;
+    this.sleepInterval = sleepInterval;
+  }    
+  void run() {
+    while(true){
+      if(!regionServer.compactCheck()){
+        try{
+          Thread.sleep(sleepInterval);
+        }catch(Exception ex){}
+      }
+    }
+  }
+}
+
