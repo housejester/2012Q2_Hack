@@ -32,13 +32,6 @@ class ParticleStack {
     this.particleBatchSize = particleBatchSize;
     maxRenderedParticles = (int)(rheight / particleHeight);
   }
-  color lighten(color c, int amount){
-    int red = (int)min(red(c)+amount, 255);
-    int green = (int) min(green(c)+amount, 255);
-    int blue = (int)min(blue(c)+amount, 255);
-
-    return color(red, green, blue);
-  }
   
   void setup(){
   }
@@ -80,7 +73,10 @@ class ParticleStack {
 
       int numParticles = inboundParticleCount;
       
-      int pFillHeight = (int)(numParticles / particlesPerPixel);
+      int pFillHeight = (int)((float)numParticles / particlesPerPixel);
+      if(pFillHeight == 0){
+        println("0 for numArticles:"+numParticles+",particlesPerPixel:"+particlesPerPixel);
+      }
       int pHeight = particleHeight;
       if(pHeight <= pFillHeight){
         pHeight = pFillHeight;

@@ -6,7 +6,7 @@ class RegionIngressViz {
   int x;
   int y;
 
-  RegionIngressViz(HBaseRegionServer regionServer, int x, int y, int width, int height, int regionWidth, int regionGap, int speed, int particleBatchSize, int particleHeight){
+  RegionIngressViz(HBaseRegionServer regionServer, int x, int y, int width, int height, int regionWidth, int regionGap, int speed){
     this.regionServer = regionServer;
     this.width = width;
     this.x = x;
@@ -16,7 +16,7 @@ class RegionIngressViz {
     regions = new RegionIngressView[numRegions];
     int fullRegionWidth = regionWidth + regionGap;
     for(int i=0; i<regions.length; i++){
-      regions[i] = new RegionIngressView(regionServer.regions[i], x+(i*fullRegionWidth), y, regionWidth, height, speed, particleBatchSize, particleHeight);
+      regions[i] = new RegionIngressView(regionServer.regions[i], x+(i*fullRegionWidth), y, regionWidth, height, speed);
     }
   }
 

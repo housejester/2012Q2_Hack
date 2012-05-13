@@ -20,10 +20,14 @@ class HBaseRegionServer {
     
     allRegions = new HBaseRegion[totalRegions];
     regions = new HBaseRegion[visibleRegions];
+    println("totalRegions:"+totalRegions+",visibleRegions:"+visibleRegions+",allRegions.length:"+allRegions.length);
     for(int i=0;i<totalRegions;i++){
       allRegions[i] = new HBaseRegion(i);
       if(i<visibleRegions){
         regions[i] = allRegions[i];
+        if(i>998){
+          println(i+":"+(regions[i] == null));
+        }
       }
     }
   }

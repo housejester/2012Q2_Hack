@@ -14,12 +14,13 @@ class FallingParticle {
 
   FallingParticle(int x, int rwidth, int speed, int maxY, int startY, int height, int filledHeight, int numParticles, boolean overfilled){
     this.id = NEXT_ID++;
+    if(height - filledHeight > 20){
+      println("height:"+height+",filledHeight:"+filledHeight);
+    }
     this.overfilled = overfilled;
     this.height = height;
     this.filledHeight = filledHeight;
-    if(this.height < this.filledHeight){
-      this.height = this.filledHeight;
-    }
+
     this.y=startY;
     this.lastY=y;
     this.x = x;
@@ -33,11 +34,7 @@ class FallingParticle {
       pushStyle();
       stroke(51);
       fill(51);
-      if(height == 1){
-        line(x-1,lastY,x+rwidth,lastY);
-      }else{
-        rect(x,lastY,rwidth-1,height-1);
-      }
+      rect(x,lastY,rwidth-1,height-1);
       popStyle();
       int initialY = this.y;
       this.y+=speed;
@@ -49,27 +46,31 @@ class FallingParticle {
         this.y=maxY;
       }
       lastY=y;
-      if(height == 1){
-        line(x,y,x+(rwidth-1),y);
+      if(height != filledHeight){
+        pushStyle();
+        stroke(0);
+        fill(0);
+        rect(x,y,rwidth-1,(height-filledHeight)-1);
+        popStyle();
+      } 
+      if(overfilled){
+        pushStyle();
+        color darker = darken(g.strokeColor, 80);          
+        stroke(darker);
+        fill(darker);
+        rect(x,y+(height-filledHeight),rwidth-1,filledHeight-1);
+        popStyle();
       }else{
-        if(height != filledHeight){
-          pushStyle();
-          stroke(0);
-          fill(0);
-          rect(x,y,rwidth-1,(height-filledHeight)-1);
-          popStyle();
-        } 
-        if(overfilled){
-          pushStyle();
-          stroke(#FF6600);
-          fill(#FF6600);
-          rect(x,y+(height-filledHeight),rwidth-1,filledHeight-1);
-          popStyle();
-        }else{
-          rect(x,y+(height-filledHeight),rwidth-1,filledHeight-1);
-        }
+        rect(x,y+(height-filledHeight),rwidth-1,filledHeight-1);
       }
     }
+  }
+  color darken(color c, int amount){
+    int red = (int)max(red(c)-amount, 0);
+    int green = (int) max(green(c)-amount, 0);
+    int blue = (int)max(blue(c)-amount, 0);
+
+    return color(red, green, blue);
   }
 
   //allows for multiple particles per frame to go to the same stack, and render separately

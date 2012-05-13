@@ -4,7 +4,6 @@ class RegionIngressView {
   int height;
   int width;
   int speed;
-  int particleBatchSize;
 
   HBaseRegion region;
   ParticleStack memStore;
@@ -12,14 +11,13 @@ class RegionIngressView {
   ParticleStack compactedFiles;
   ParticleStack deletedFiles;
   
-  RegionIngressView(HBaseRegion region, int x, int y, int width, int height, int speed, int particleBatchSize, int particleHeight){
+  RegionIngressView(HBaseRegion region, int x, int y, int width, int height, int speed){
     this.region = region;
     this.x = x;
     this.y = y;
     this.width = width;
     this.height = height;
     this.speed = speed;
-    this.particleBatchSize = particleBatchSize;
     
     memStore = new ParticleStack(x, width, speed, 1, y, 150, 1, 1, false);
     storeFiles = new ParticleStack(x, width, speed, 100, y+150, 180, 21, 5, true);
@@ -32,6 +30,9 @@ class RegionIngressView {
   int lastStoreFileCount = 0;
   
   void draw(){
+    if(region == null){
+      println ("region is null");
+    }
     memStore.setParticleCount(region.memStorePutsCount);
     if(region.flushing){
       fill(#FF0000);
@@ -42,7 +43,7 @@ class RegionIngressView {
     }
     memStore.draw();
     
-    storeFiles.setParticleCount(region.storeFiles.size());
+    storeFiles.setParticleCount(region.storeFilePutsCount);
     if(lastStoreFileCount > region.storeFiles.size()){
       //storeFileCount different!  the region must have compacted.
       storeFiles.compact();
