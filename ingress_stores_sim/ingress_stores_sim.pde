@@ -49,7 +49,7 @@ void storeFlusher() throws Exception{
     if(regionServer.isAboveGlobalMemThreshold()){
       int largest = -1;
       int largestIndex = -1;
-      for(int i=0;i<regionServer.regions.length;i++){
+      for(int i=0;i<regionServer.allRegions.length;i++){
         if(regionServer.allRegions[i].memStorePutsCount > largest){
           largest = regionServer.allRegions[i].memStorePutsCount;
           largestIndex = i;

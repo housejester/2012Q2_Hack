@@ -25,9 +25,6 @@ class HBaseRegionServer {
       allRegions[i] = new HBaseRegion(i);
       if(i<visibleRegions){
         regions[i] = allRegions[i];
-        if(i>998){
-          println(i+":"+(regions[i] == null));
-        }
       }
     }
   }
