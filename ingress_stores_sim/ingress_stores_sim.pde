@@ -2,7 +2,7 @@ HBaseRegionServer regionServer;
 RegionIngressViz regionIngressViz;
 
 int particlesPerSecond = 40000;
-int totalRegions = 1024;
+int totalRegions = 1024 * 8;
 int numRegionServers = 8;
 int regionWidth = 10;
 int gapWidth = 3;
