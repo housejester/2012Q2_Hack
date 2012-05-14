@@ -1,4 +1,11 @@
 HBase Visualizer
+Install Processing 2.0a5 from processing.org
+Launch Processing
+Open any one of the pde files in here
+Either hit the play button, or hit Cmd+Shift+R to run full screen (hit esc to get out, try not to accidentally do so :) ).
+
+
+Presentation "Script"
 James put together some visualizations for the HBase talk that he and Brent are doing for HBaseCon.  
 
 Fire it up
