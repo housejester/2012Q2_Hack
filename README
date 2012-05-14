@@ -1,0 +1,22 @@
+HBase Visualizer
+James put together some visualizations for the HBase talk that he and Brent are doing for HBaseCon.  
+
+Fire it up
+
+It basically shows how hbase is managing under our old approach.
+
+This shows about 10% of one of our hbase servers.
+
+At the top, you see articles coming in.
+
+The articles are collected into hbase memory or MemStores (the white columns)
+
+You see the orange boxes dropping down, that is the mem stores getting flushed to disk.  The black on top of the orange shows that the storefile is not as large as is ideal (so they're small store files on disk). The MemStores start to flush early because the server is under too much memory pressure.  When a storefile is the ideal size or larger, it is a darker orange.  
+
+You should now start seeing all the mem stores turn red.  This indicates that those mem stores are wanting to be flushed, because they're at ideal size or more.  Only one thread does the flushing, so the flush queue backs up a little bit when a bunch get to the ideal size at the same time.
+
+After the forth store file drops in, the orange boxes turn red.  This means that they want to be compacted.  Compaction essentially merges the smaller storefiles into a larger one.  
+
+After a compaction, you should see little black lines showing up in the store files.  This indicates articles within the store that have expired…they're over 30 days old and we no longer read them, they will be removed at the next compaction. 
+
+This showed the old schema…he has one for the new one (mobius) as well, and will have that ready at the talk.  He also plans to show some guages and such at the bottom, and also provide a visualization of where the reads are.
