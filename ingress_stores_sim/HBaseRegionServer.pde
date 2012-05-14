@@ -9,8 +9,10 @@ class HBaseRegionServer {
   long memStoreItemThreshold;
   ArrayList flushQueue;
   ArrayList compactionQueue;
+  HBaseSchema schema;
   
-  HBaseRegionServer(int totalRegions, int visibleRegions, int avgPutSizeBytes, int compressionPct, long serverMemoryBytes){
+  HBaseRegionServer(int totalRegions, int visibleRegions, int avgPutSizeBytes, int compressionPct, long serverMemoryBytes, HBaseSchema schema){
+    this.schema = schema;
     this.totalRegions = totalRegions;
     this.visibleRegions = visibleRegions;
     this.avgPutSizeBytes = avgPutSizeBytes - (int)(avgPutSizeBytes * ((float)compressionPct/100.0));
@@ -47,7 +49,7 @@ class HBaseRegionServer {
 
   void compactRegion(int index){
     HBaseRegion region = allRegions[index];
-    region.compactStores(30);
+    region.compactStores(80);
   }
   
   boolean isAboveGlobalMemThreshold(){
@@ -57,7 +59,7 @@ class HBaseRegionServer {
   void addPuts(int numP){
     totalPutsInMemory += numP;
     for(int i=0;i<numP;i++){
-      int which = (int)random(allRegions.length);
+      int which = schema.nextPutRegion();
       boolean before = allRegions[which].flushing;
       allRegions[which].addPuts(1);
       if(!before && allRegions[which].flushing){

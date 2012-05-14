@@ -11,12 +11,10 @@ class FallingParticle {
   int filledHeight;
   int numParticles;
   boolean overfilled;
+  long created;
 
   FallingParticle(int x, int rwidth, int speed, int maxY, int startY, int height, int filledHeight, int numParticles, boolean overfilled){
     this.id = NEXT_ID++;
-    if(height - filledHeight > 20){
-      println("height:"+height+",filledHeight:"+filledHeight);
-    }
     this.overfilled = overfilled;
     this.height = height;
     this.filledHeight = filledHeight;
@@ -28,6 +26,7 @@ class FallingParticle {
     this.speed = speed;
     this.maxY = maxY;
     this.numParticles = numParticles;
+    this.created = System.currentTimeMillis();
   }
   void draw(){
     if(y<=maxY){

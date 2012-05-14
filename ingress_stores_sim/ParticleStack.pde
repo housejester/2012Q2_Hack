@@ -17,6 +17,7 @@ class ParticleStack {
   ArrayList falling;
   ArrayList landed;
   boolean highlightOverfills;
+  boolean hasReset = false;
   
   ParticleStack(int x, int rwidth, int speed, int particleBatchSize, int y, int rheight, int particleHeight, int particlesPerPixel, boolean highlightOverfills){
     this.x = x;
@@ -111,6 +112,7 @@ class ParticleStack {
   }
   
   void reset(){
+    hasReset = true;
     falling.clear();
     landed.clear();
     inboundParticleCount=0;

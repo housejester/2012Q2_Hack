@@ -16,7 +16,7 @@ class RegionIngressViz {
     regions = new RegionIngressView[numRegions];
     int fullRegionWidth = regionWidth + regionGap;
     for(int i=0; i<regions.length; i++){
-      regions[i] = new RegionIngressView(regionServer.regions[i], x+(i*fullRegionWidth), y, regionWidth, height, speed);
+      regions[i] = new RegionIngressView(regionServer.regions[i], x+(i*fullRegionWidth), y, regionWidth, height, speed, regionServer.schema);
     }
   }
 

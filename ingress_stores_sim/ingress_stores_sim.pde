@@ -1,14 +1,10 @@
 HBaseRegionServer regionServer;
 RegionIngressViz regionIngressViz;
 
-int particlesPerSecond = 40000;
-int totalRegions = 1024 * 8;
-int numRegionServers = 8;
 int regionWidth = 10;
 int gapWidth = 3;
 int speed = 10;
 
-int avgParticleSize = 2048 * 300;
 int maxRenderedParticlesize = 64 * 1024 * 1024;
 long maxMemStoreAll = 4 * 1024 * 1024 * 1024L;
 
@@ -24,17 +20,21 @@ void setup() {
   int widgetX = (int)((width-widgetWidth)/2);
   
   int fullRegionWidth = regionWidth+gapWidth;
-  int regionsOnServer = totalRegions/numRegionServers;
-  int numstacks = min(widgetWidth / fullRegionWidth, regionsOnServer);
+  
+  IngressSimulator sim = new IngressSimulator();
+//  mobius(sim);
+  oldSchool(sim);
+  
+  int numstacks = min(widgetWidth / fullRegionWidth, sim.regionsOnServer);
   
   int memStoreY = 0;
   
   println("num regions displayed: "+numstacks);
 
-  particlesPerMilli = ((float)particlesPerSecond / numRegionServers)/1000;
+  particlesPerMilli = ((float)sim.particlesPerSecond / sim.numRegionServers)/1000;
   println("ppmilli="+particlesPerMilli);
 
-  regionServer = new HBaseRegionServer(regionsOnServer, numstacks, avgParticleSize, 50, maxMemStoreAll);
+  regionServer = new HBaseRegionServer(sim.regionsOnServer, numstacks, sim.avgParticleSize, 0, maxMemStoreAll, sim.schema);
   regionIngressViz = new RegionIngressViz(regionServer, widgetX, 0, widgetWidth, height, regionWidth, gapWidth, speed);
   regionIngressViz.setup();
   
@@ -57,4 +57,28 @@ void ingress() throws Exception{
   }
 }
 
+void oldSchool(IngressSimulator sim){
+  sim.particlesPerSecond = 40000;
+  sim.totalRegions = 1024 * 8;
+  sim.avgParticleSize = 2048 * 300;
+  sim.regionsOnServer = (int)(sim.totalRegions/sim.numRegionServers);
+  sim.schema = new OldSchoolSchema(sim.regionsOnServer);
+}
+
+void mobius(IngressSimulator sim){
+  sim.particlesPerSecond = 4000;
+  sim.totalRegions = 64*37;
+  sim.avgParticleSize = 2048;
+  sim.regionsOnServer = (int)(sim.totalRegions/sim.numRegionServers);
+  sim.schema = new MobiusSchema(sim.regionsOnServer);
+}
+
+class IngressSimulator {
+  int numRegionServers = 8;
+  int particlesPerSecond = 4000;
+  int totalRegions = 64 * 37;
+  int avgParticleSize = 2048;
+  int regionsOnServer = (int)(totalRegions/numRegionServers);
+  HBaseSchema schema = new OldSchoolSchema(regionsOnServer);
+}
 
