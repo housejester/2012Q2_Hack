@@ -13,6 +13,7 @@ class FallingParticle {
   boolean overfilled;
   long created;
   boolean renderedDeletes;
+  boolean renderedReads;
 
   FallingParticle(int x, int rwidth, int speed, int maxY, int startY, int height, int filledHeight, int numParticles, boolean overfilled){
     this.id = NEXT_ID++;
@@ -29,7 +30,14 @@ class FallingParticle {
     this.numParticles = numParticles;
     this.created = System.currentTimeMillis();
   }
+   
   void draw(){
+    draw(false);
+  }
+  void draw(boolean force){
+    if(!force && (renderedDeletes || renderedReads)){
+      return;
+    }
     if(y<=maxY){
       pushStyle();
       stroke(51);
@@ -46,13 +54,6 @@ class FallingParticle {
         this.y=maxY;
       }
       lastY=y;
-      if(height != filledHeight){
-//        pushStyle();
-//        stroke(0);
-//        fill(0);
-//        rect(x,y,rwidth-1,(height-filledHeight)-1);
-//        popStyle();
-      } 
       if(overfilled){
         pushStyle();
         color darker = darken(g.strokeColor, 80);          

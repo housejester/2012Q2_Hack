@@ -42,17 +42,17 @@ class ParticleStack {
       fallingA.draw();
     }
 
-    boolean removedOne = false;
+    int removedCount = 0;
     for (int i = falling.size()-1; i >= 0; i--) { 
       FallingParticle fallingA = (FallingParticle) falling.get(i);
       if(fallingA.isDone()){
-        removedOne = true;
+        ++removedCount;
         falling.remove(i);
         landed.add(fallingA);
       }
     }
     
-    if(removedOne){
+    if(!landed.isEmpty()){
       for(int i=0;i<landed.size();i++){
         FallingParticle landedA = (FallingParticle) landed.get(i);
         landedA.draw();

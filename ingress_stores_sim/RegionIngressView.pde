@@ -8,8 +8,6 @@ class RegionIngressView {
   HBaseRegion region;
   ParticleStack memStore;
   ParticleStack storeFiles;
-  ParticleStack compactedFiles;
-  ParticleStack deletedFiles;
   HBaseSchema schema;
   
   RegionIngressView(HBaseRegion region, int x, int y, int width, int height, int speed, HBaseSchema schema){
@@ -41,6 +39,7 @@ class RegionIngressView {
       stroke(255);
     }
     memStore.draw();
+    schema.decorateMemStore(region, memStore);
     
     if(lastStoreFileCount > region.storeFiles.size()){
       //storeFileCount different!  the region must have compacted.
@@ -57,6 +56,6 @@ class RegionIngressView {
       stroke(#FF9966);
     }
     storeFiles.draw();
-    schema.decorate(region, storeFiles);
+    schema.decorateStoreFiles(region, storeFiles);
   }
 }

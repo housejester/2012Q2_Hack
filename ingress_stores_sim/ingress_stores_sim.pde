@@ -51,6 +51,15 @@ void keyPressed() {
     println("showing reads: "+showReads);
     println("showing deletes: "+showDeletes);
     sim.schema.showDeletes(showDeletes);
+    if(!showDeletes){
+      for(int i=0;i<regionIngressViz.regions.length; i++){
+        RegionIngressView view = (RegionIngressView)regionIngressViz.regions[i];
+        for(int j=0;j<view.storeFiles.landed.size();j++){
+          FallingParticle p = (FallingParticle)view.storeFiles.landed.get(j);
+          p.renderedDeletes = false;
+        }
+      }
+    }
   }else if( key == 'r'){
     showReads = !showReads;
     println("toggled reads");
