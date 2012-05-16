@@ -12,6 +12,7 @@ class FallingParticle {
   int numParticles;
   boolean overfilled;
   long created;
+  boolean renderedDeletes;
 
   FallingParticle(int x, int rwidth, int speed, int maxY, int startY, int height, int filledHeight, int numParticles, boolean overfilled){
     this.id = NEXT_ID++;

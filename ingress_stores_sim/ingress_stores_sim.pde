@@ -10,6 +10,7 @@ long maxMemStoreAll = 4 * 1024 * 1024 * 1024L;
 
 float particlesPerMilli = 0;
 long lastMilli = millis();
+IngressSimulator sim = null;
 
 void setup() {
   size(1324, 768);
@@ -21,9 +22,9 @@ void setup() {
   
   int fullRegionWidth = regionWidth+gapWidth;
   
-  IngressSimulator sim = new IngressSimulator();
-  mobius(sim);
-//  oldSchool(sim);
+  sim = new IngressSimulator();
+//  mobius(sim);
+  oldSchool(sim);
   
   int numstacks = min(widgetWidth / fullRegionWidth, sim.regionsOnServer);
   
@@ -39,6 +40,24 @@ void setup() {
   regionIngressViz.setup();
   
   thread("ingress");
+}
+boolean showDeletes = false;
+boolean showReads = false;
+
+void keyPressed() {
+  if(key == 'd'){
+    showDeletes = !showDeletes;
+    println("toggled deletes");
+    println("showing reads: "+showReads);
+    println("showing deletes: "+showDeletes);
+    sim.schema.showDeletes(showDeletes);
+  }else if( key == 'r'){
+    showReads = !showReads;
+    println("toggled reads");
+    println("showing reads: "+showReads);
+    println("showing deletes: "+showDeletes);
+    sim.schema.showReads(showReads);
+  }
 }
 
 void draw() {
