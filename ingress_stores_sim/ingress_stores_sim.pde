@@ -22,8 +22,8 @@ void setup() {
   int fullRegionWidth = regionWidth+gapWidth;
   
   IngressSimulator sim = new IngressSimulator();
-//  mobius(sim);
-  oldSchool(sim);
+  mobius(sim);
+//  oldSchool(sim);
   
   int numstacks = min(widgetWidth / fullRegionWidth, sim.regionsOnServer);
   
@@ -66,7 +66,7 @@ void oldSchool(IngressSimulator sim){
 }
 
 void mobius(IngressSimulator sim){
-  sim.particlesPerSecond = 4000;
+  sim.particlesPerSecond = 8000;
   sim.totalRegions = 64*37;
   sim.avgParticleSize = 2048;
   sim.regionsOnServer = (int)(sim.totalRegions/sim.numRegionServers);

@@ -46,11 +46,11 @@ class FallingParticle {
       }
       lastY=y;
       if(height != filledHeight){
-        pushStyle();
-        stroke(0);
-        fill(0);
-        rect(x,y,rwidth-1,(height-filledHeight)-1);
-        popStyle();
+//        pushStyle();
+//        stroke(0);
+//        fill(0);
+//        rect(x,y,rwidth-1,(height-filledHeight)-1);
+//        popStyle();
       } 
       if(overfilled){
         pushStyle();

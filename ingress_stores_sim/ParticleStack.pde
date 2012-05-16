@@ -89,7 +89,7 @@ class ParticleStack {
       stackHeight += pHeight;
       int maxY = y+(rheight - stackHeight);
       
-      falling.add(new FallingParticle(x, rwidth, speed, maxY, y, pHeight, pFillHeight, numParticles, highlightOverfills && (pFillHeight >= particleHeight)));
+      falling.add(new FallingParticle(x, rwidth, speed, maxY, y, pHeight, pFillHeight, numParticles, highlightOverfills && ((pFillHeight+1) >= particleHeight)));
       inboundParticleCount -= numParticles;
       ++numRenderedParticles;
     }

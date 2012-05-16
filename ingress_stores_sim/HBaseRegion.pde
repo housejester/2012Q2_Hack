@@ -33,32 +33,47 @@ class HBaseRegion {
  
   void flushMemStore(long pause){
     int puts = memStorePutsCount;
-    storeFiles.add(puts);
+    synchronized(storeFiles){
+      storeFiles.add(puts);
+    }
     storeFilePutsCount += puts;
     memStorePutsCount -= puts;
     flushing = false;
     try{
       Thread.sleep(pause);
     }catch(Exception ex){}
-
-    if(storeFiles.size() > 3){
-      compacting = true;
-    }
   }
   
   void compactStores(long pause){
     long compactPutsCount = storeFilePutsCount;
-    try{
-      Thread.sleep(pause);
-    }catch(Exception ex){}
+    int lastStoreSize = 0;
+    int numStores = 0;
+    synchronized(storeFiles){
+      numStores = storeFiles.size();
+      lastStoreSize = (Integer)storeFiles.get(storeFiles.size()-1);
+    }
     int remove =  (int)min(ttlCount, compactPutsCount);
     if(!fullTTL){
       remove = min(remove, (int)(compactPutsCount / 3));
+    }else{
+      remove = remove - (int)(lastStoreSize/2);
     }
+    float ttlPct = (float)remove / compactPutsCount;
+    float invTtlPct = 1 - ttlPct;
+    //compactions are faster with more deletes
+    long compactionTime = 10 + (long)invTtlPct * pause;
+    
+    try{
+      Thread.sleep(compactionTime);
+    }catch(Exception ex){}
     storeFilePutsCount -= remove;
     ttlCount = 0;
     fullTTL = false;
-    storeFiles.clear();
+    synchronized(storeFiles){
+      for(int i=numStores-1; i>0;i--){
+        storeFiles.remove(i);
+      }
+    }
     compacting = false;
   }
   

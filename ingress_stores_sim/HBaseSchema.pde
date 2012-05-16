@@ -51,7 +51,7 @@ class MobiusSchema implements HBaseSchema {
     long now = System.currentTimeMillis();
     for(int i=0;i<stack.landed.size();i++){
       FallingParticle p = (FallingParticle)stack.landed.get(i);
-      if(region.ttlCount == 0 && (now - p.created) >= thirtyDay){
+      if((now - p.created) >= thirtyDay){
         region.ttl(region.storeFilePutsCount);
         pushStyle();
         stroke(0);

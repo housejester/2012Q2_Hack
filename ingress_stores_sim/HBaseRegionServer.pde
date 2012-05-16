@@ -49,7 +49,7 @@ class HBaseRegionServer {
 
   void compactRegion(int index){
     HBaseRegion region = allRegions[index];
-    region.compactStores(80);
+    region.compactStores(60);
   }
   
   boolean isAboveGlobalMemThreshold(){
